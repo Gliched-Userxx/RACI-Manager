@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>RACI Manager - Maintenance Planning</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="mobile-header-left">
+            <button class="hamburger-menu" onclick="toggleMenu()">☰</button>
+            <div class="header-title">RACI</div>
+        </div>
+        <div class="mobile-header-right">
+            <button class="header-btn" onclick="openModal('exportModal')" title="Export">📥</button>
+            <button class="header-btn" onclick="window.print()" title="Print">🖨️</button>
+        </div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMenu()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="closeMenu()">✕</button>
+        <div class="sidebar-header">
+            <div class="sidebar-logo">🔧 RACI Manager</div>
+            <div class="sidebar-subtitle">Maintenance Planning</div>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a class="nav-link active" onclick="switchTab('overview'); closeMenu();">📊 Overview</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="switchTab('matrix'); closeMenu();">📈 Matrix</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="switchTab('roles'); closeMenu();">👥 Team Roles</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="switchTab('processes'); closeMenu();">⚙️ Processes</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="switchTab('analytics'); closeMenu();">📊 Analytics</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="switchTab('help'); closeMenu();">❓ Help</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('overview')">Overview</button>
+            <button class="tab-button" onclick="switchTab('matrix')">Matrix</button>
+            <button class="tab-button" onclick="switchTab('roles')">Roles</button>
+            <button class="tab-button" onclick="switchTab('processes')">Process</button>
+            <button class="tab-button" onclick="switchTab('analytics')">Stats</button>
+            <button class="tab-button" onclick="switchTab('help')">Help</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <div class="card-title">📊 Quick Overview</div>
+                <div class="stats-grid">
+                    <div class="stat-box"><div class="stat-number">6</div><div class="stat-label">Roles</div></div>
+                    <div class="stat-box"><div class="stat-number">6</div><div class="stat-label">Processes</div></div>
+                    <div class="stat-box"><div class="stat-number">36</div><div class="stat-label">Assignments</div></div>
+                    <div class="stat-box"><div class="stat-number">100%</div><div class="stat-label">Coverage</div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎯 RACI Legend</div>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="legend-box R">R</div>
+                        <div class="legend-content">
+                            <h3>RESPONSIBLE</h3>
+                            <p>Does the work and executes the task</p>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box A">A</div>
+                        <div class="legend-content">
+                            <h3>ACCOUNTABLE</h3>
+                            <p>Owns the outcome and sign-off</p>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box C">C</div>
+                        <div class="legend-content">
+                            <h3>CONSULTED</h3>
+                            <p>Provides input and feedback</p>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box I">I</div>
+                        <div class="legend-content">
+                            <h3>INFORMED</h3>
+                            <p>Kept in the loop</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Matrix Tab -->
+        <div id="matrix" class="tab-content">
+            <div class="controls-bar">
+                <input type="text" id="searchInput" placeholder="🔍 Search processes...">
+                <button class="btn btn-secondary" onclick="resetFilters()">Clear</button>
+            </div>
+            <div class="matrix-container">
+                <div class="matrix-wrapper">
+                    <table class="raci-matrix" id="raciTable">
+                        <thead>
+                            <tr>
+                                <th>Process</th>
+                                <th>Supervisor</th>
+                                <th>Planner</th>
+                                <th>Technician</th>
+                                <th>Manager</th>
+                                <th>Storeroom</th>
+                                <th>Purchasing</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matrixBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roles Tab -->
+        <div id="roles" class="tab-content">
+            <div class="roles-grid" id="rolesGrid"></div>
+        </div>
+
+        <!-- Processes Tab -->
+        <div id="processes" class="tab-content">
+            <div class="card">
+                <div class="card-title">⚙️ All Processes</div>
+                <div class="timeline" id="processTimeline"></div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <div class="card">
+                <div class="card-title">📊 Role Distribution</div>
+                <div class="stats-grid">
+                    <div class="stat-box"><div class="stat-number">18</div><div class="stat-label">Responsible</div></div>
+                    <div class="stat-box"><div class="stat-number">6</div><div class="stat-label">Accountable</div></div>
+                    <div class="stat-box"><div class="stat-number">8</div><div class="stat-label">Consulted</div></div>
+                    <div class="stat-box"><div class="stat-number">12</div><div class="stat-label">Informed</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Tab -->
+        <div id="help" class="tab-content">
+            <div class="card">
+                <div class="card-title">❓ How to Use</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">1</div>
+                        <div class="timeline-content">
+                            <h4>View Overview</h4>
+                            <p>Check the Overview tab to see RACI legend and quick stats</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">2</div>
+                        <div class="timeline-content">
+                            <h4>Browse Matrix</h4>
+                            <p>Visit Matrix tab to see all role assignments</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">3</div>
+                        <div class="timeline-content">
+                            <h4>Check Roles</h4>
+                            <p>Learn each role's key responsibilities</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">4</div>
+                        <div class="timeline-content">
+                            <h4>Export Data</h4>
+                            <p>Use export button to download as CSV or JSON</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Export Options</h2>
+                <button class="close-btn" onclick="closeModal('exportModal')">&times;</button>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="exportToCSV()">📊 Download CSV</button>
+                <button class="btn btn-primary" onclick="exportToJSON()">💾 Download JSON</button>
+                <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
